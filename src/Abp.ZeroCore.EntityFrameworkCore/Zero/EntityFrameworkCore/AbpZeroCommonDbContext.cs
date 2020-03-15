@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Abp.Webhooks;
 
 namespace Abp.Zero.EntityFrameworkCore
 {
@@ -140,6 +141,21 @@ namespace Abp.Zero.EntityFrameworkCore
         /// </summary>
         public virtual DbSet<EntityPropertyChange> EntityPropertyChanges { get; set; }
 
+        /// <summary>
+        /// Webhook information
+        /// </summary>
+        public virtual DbSet<WebhookEvent> WebhookEvents { get; set; }
+
+        /// <summary>
+        /// Web subscriptions
+        /// </summary>
+        public virtual DbSet<WebhookSubscriptionInfo> WebhookSubscriptions { get; set; }
+
+        /// <summary>
+        /// Webhook work items
+        /// </summary>
+        public virtual DbSet<WebhookSendAttempt> WebhookSendAttempts { get; set; }
+
         public IEntityHistoryHelper EntityHistoryHelper { get; set; }
 
         /// <summary>
@@ -258,7 +274,7 @@ namespace Abp.Zero.EntityFrameworkCore
 
             modelBuilder.Entity<OrganizationUnit>(b =>
             {
-                b.HasIndex(e => new { e.TenantId, e.Code });
+                b.HasIndex(e => new { e.TenantId, e.Code }).IsUnique();
             });
 
             modelBuilder.Entity<PermissionSetting>(b =>
@@ -279,7 +295,7 @@ namespace Abp.Zero.EntityFrameworkCore
 
             modelBuilder.Entity<Setting>(b =>
             {
-                b.HasIndex(e => new { e.TenantId, e.Name });
+                b.HasIndex(e => new { e.TenantId, e.Name, e.UserId }).IsUnique().HasFilter(null);
             });
 
             modelBuilder.Entity<TenantNotificationInfo>(b =>
