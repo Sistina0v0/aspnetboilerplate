@@ -502,7 +502,7 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
             .Take(64)
             .ToListAsync();
 
-        return new ListResultDto<EventListDto>(events.MapTo<List<EventListDto>>());
+        return new ListResultDto<EventListDto>(ObjectMapper.MapTo<List<EventListDto>>(events));
     }
 
     public async Task<EventDetailOutput> GetDetailAsync(EntityDto<Guid> input)
@@ -519,7 +519,7 @@ public class EventAppService : EventCloudAppServiceBase, IEventAppService
             throw new UserFriendlyException("Could not found the event, maybe it's deleted.");
         }
 
-        return @event.MapTo<EventDetailOutput>();
+        return ObjectMapper.MapTo<EventDetailOutput>(@event);
     }
 
     public async Task CreateAsync(CreateEventInput input)
@@ -975,4 +975,4 @@ Almost all operations available on UI also available as Web API (since UI uses t
 
 ### Source Code
 
-You can get the latest source code here [Event Cloud Source](https://github.com/aspnetboilerplate/eventcloudcore)
+You can get the latest source code here [Event Cloud Source](https://github.com/aspnetboilerplate/eventcloud)

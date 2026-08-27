@@ -1,33 +1,34 @@
-﻿using Abp.Domain.Uow;
+using Abp.AspNetCore.Mvc.RazorPages;
+using Abp.Domain.Uow;
 using Abp.UI;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
 
-namespace AbpAspNetCoreDemo.Pages
+namespace AbpAspNetCoreDemo.Pages;
+
+[UnitOfWork(IsDisabled = true)]
+[IgnoreAntiforgeryToken]
+public class UowFilterPageDemo2 : AbpPageModel
 {
-    [UnitOfWork(IsDisabled = true)]
-    public class UowFilterPageDemo2 : PageModel
+    private readonly IUnitOfWorkManager _unitOfWorkManager;
+
+    public UowFilterPageDemo2(IUnitOfWorkManager unitOfWorkManager)
     {
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
+        _unitOfWorkManager = unitOfWorkManager;
+    }
 
-        public UowFilterPageDemo2(IUnitOfWorkManager unitOfWorkManager)
+    public void OnGet()
+    {
+        if (_unitOfWorkManager.Current == null)
         {
-            _unitOfWorkManager = unitOfWorkManager;
+            throw new UserFriendlyException("Current UnitOfWork is null");
         }
+    }
 
-        public void OnGet()
+    public void OnPost()
+    {
+        if (_unitOfWorkManager.Current == null)
         {
-            if (_unitOfWorkManager.Current == null)
-            {
-                throw new UserFriendlyException("Current UnitOfWork is null");
-            }
-        }
-
-        public void OnPost()
-        {
-            if (_unitOfWorkManager.Current == null)
-            {
-                throw new UserFriendlyException("Current UnitOfWork is null");
-            }
+            throw new UserFriendlyException("Current UnitOfWork is null");
         }
     }
 }
